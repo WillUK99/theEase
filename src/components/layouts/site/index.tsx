@@ -1,18 +1,19 @@
 import React from 'react'
 
+import Navbar from './navbar'
+
 type Props = {
   children: React.ReactNode
 }
 
-const DashboardLayout = (props: Props) => {
+const SiteLayout = (props: Props) => {
   const { children } = props
-
   return (
     <>
-      <div>DashboardLayout</div>
+      <Navbar />
       {children}
     </>
   )
 }
 
-export default DashboardLayout
+export default SiteLayout

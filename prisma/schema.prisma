@@ -49,6 +49,7 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
+    role          String    @default("USER")
     name          String?
     email         String?   @unique
     emailVerified DateTime?
@@ -63,4 +64,32 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Service {
+    id             String          @id @default(cuid())
+    name           String
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+    price          Float
+    priceId        String?
+    description    String?
+    what_to_expect String?
+    instructions   String?
+    duration       Int
+    isBestSeller   Boolean         @default(false)
+    isNew          Boolean         @default(false)
+    addons         ServiceAddons[]
+}
+
+model ServiceAddons {
+    id        String   @id @default(cuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    price     Float
+    priceId   String?
+    duration  Int
+    service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+    serviceId String
 }
