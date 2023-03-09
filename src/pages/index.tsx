@@ -19,20 +19,20 @@ const Home: NextPage = () => {
       {/* <SEO /> */}
       <SiteLayout>
         {/* banner */}
-        <section className='container mx-auto flex flex-col'>
+        <section className='container flex flex-col mx-auto'>
           <h1>Taking your wellness program to the <span> next level </span></h1>
           <p>Discover how our B2B beauty services can improve employee morale, productivity and help to attract new clients. Book your consultation today and see the difference for yourself!</p>
           <Link href='/services'>Pamper my team</Link>
         </section>
 
         {/* join these other companies */}
-        <section className='container mx-auto flex flex-col gap-10'>
+        <section className='container flex flex-col mx-auto gap-10'>
           <div className='flex flex-row items-center justify-between gap-5'>
             <p className='w-[12rem]'>Join the 64+ teams</p>
-            <hr className='border-black w-full' />
+            <hr className='w-full border-black' />
           </div>
 
-          <hr className='border-black w-full' />
+          <hr className='w-full border-black' />
         </section>
       </SiteLayout>
     </>

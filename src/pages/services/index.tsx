@@ -21,7 +21,7 @@ const Services: NextPage = () => {
             return (
               <Link
                 key={i}
-                className='bg-orange-200 w-fit p-5 hover:bg-orange-400'
+                className='p-5 bg-orange-200 w-fit hover:bg-orange-400'
                 href={`/services/${service.toLocaleLowerCase().split(' ').join('-')}`}
               >
                 {service}

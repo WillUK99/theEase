@@ -6,7 +6,7 @@ type Props = {}
 const Sidebar = (props: Props) => {
   return (
     <div
-      className='bg-gray-900 h-screen w-64 flex flex-col items-center justify-between text-white py-10'
+      className='flex flex-col items-center justify-between w-64 h-screen py-10 text-white bg-gray-900'
     >
       <h1>The ease project</h1>
       <nav>

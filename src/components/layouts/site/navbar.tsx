@@ -5,7 +5,7 @@ const Navbar = () => {
   const { data: sessionData } = useSession()
 
   return (
-    <nav className='flex flex-row items-center justify-between container mx-auto py-5'>
+    <nav className='container flex flex-row items-center justify-between py-5 mx-auto'>
       <ul className='flex flex-row items-center justify-center gap-10'>
         <li>
           <Link href='/resources'>Resources</Link>

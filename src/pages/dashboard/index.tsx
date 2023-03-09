@@ -13,7 +13,11 @@ const DashboardIndex: NextPage = (props: Props) => {
   console.log(sessionData)
 
   return (
-    <DashboardLayout><iframe src="https://giphy.com/embed/xTiIzJSKB4l7xTouE8" width="480" height="208" frameBorder="0" allowFullScreen></iframe></DashboardLayout>
+    <DashboardLayout>
+      <div>
+        <h1>Hi</h1>
+      </div>
+    </DashboardLayout>
   )
 }
 
