@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "statistic": "Total Bookings",
+    "slug": "total-bookings",
+    "isCurrency": false,
+    "daily": {
+      "total": 15,
+      "target": 22
+    },
+    "weekly": {
+      "total": 35,
+      "target": 40
+    },
+    "monthly": {
+      "total": 182,
+      "target": 200
+    }
+  },
+  {
+    "id": 2,
+    "statistic": "Total Revenue",
+    "slug": "total-revenue",
+    "isCurrency": true,
+    "daily": {
+      "total": 1233,
+      "target": 1500
+    },
+    "weekly": {
+      "total": 5669,
+      "target": 6000
+    },
+    "monthly": {
+      "total": 23456,
+      "target": 25000
+    }
+  },
+  {
+    "id": 3,
+    "statistic": "On-Time Completion",
+    "slug": "on-time-completion",
+    "isCurrency": false,
+    "daily": {
+      "total": 78,
+      "target": 100
+    },
+    "weekly": {
+      "total": 91,
+      "target": 100
+    },
+    "monthly": {
+      "total": 67,
+      "target": 100
+    }
+  },
+  {
+    "id": 4,
+    "statistic": "Average Response Time",
+    "slug": "average-response-time",
+    "isCurrency": false,
+    "daily": {
+      "total": 462,
+      "target": 1440
+    },
+    "weekly": {
+      "total": 1107,
+      "target": 1440
+    },
+    "monthly": {
+      "total": 1656,
+      "target": 1440
+    }
+  },
+  {
+    "id": 5,
+    "statistic": "Operating Profit Margin (%)",
+    "slug": "operating-profit-margin",
+    "isCurrency": false,
+    "daily": {
+      "total": 38,
+      "target": 65
+    },
+    "weekly": {
+      "total": 59,
+      "target": 65
+    },
+    "monthly": {
+      "total": 53,
+      "target": 65
+    }
+  }
+]

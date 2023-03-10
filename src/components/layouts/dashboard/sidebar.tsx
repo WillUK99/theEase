@@ -11,18 +11,18 @@ const Sidebar = (props: Props) => {
       <h1>The ease project</h1>
       <nav>
         <ul className='flex flex-col items-center justify-center gap-5'>
-          <Link href='/dashboard'>Overview</Link>
-          <Link href='/dashboard/growth'>Growth</Link>
-          <Link href='/dashboard/customers'>Customers</Link>
-          <Link href='/dashboard/professionals'>Professionals</Link>
-          <Link href='/dashboard/bookings'>Bookings</Link>
-          <Link href='/dashboard/reports'>Reports</Link>
+          <Link href='/admin'>Overview</Link>
+          <Link href='/admin/customers'>Customers</Link>
+          <Link href='/admin/professionals'>Professionals</Link>
+          <Link href='/admin/bookings'>Bookings</Link>
+          <Link href='/admin/services'>Services</Link>
+          <Link href='/admin/reports'>Reports</Link>
         </ul>
       </nav>
 
       <nav>
         <ul>
-          <Link href='/dashboard/support'>Support</Link>
+          <Link href='/admin/support'>Support</Link>
         </ul>
       </nav>
     </div>

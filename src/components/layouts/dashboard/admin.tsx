@@ -1,15 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 
 import Sidebar from './sidebar'
-import Link from 'next/link'
 
 type Props = {
   children: React.ReactNode
 }
 
-const DashboardLayout = (props: Props) => {
+const AdminLayout = (props: Props) => {
   const { data: sessionData } = useSession()
 
   const { children } = props
@@ -65,7 +65,7 @@ const DashboardLayout = (props: Props) => {
             </div>
           </nav>
         </div>
-        <div className='p-2'>
+        <div className='h-full p-4 bg-slate-100'>
           {children}
         </div>
       </div>
@@ -73,4 +73,4 @@ const DashboardLayout = (props: Props) => {
   )
 }
 
-export default DashboardLayout
+export default AdminLayout
