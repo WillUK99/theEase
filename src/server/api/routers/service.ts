@@ -6,12 +6,16 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
-export const exampleRouter = createTRPCRouter({
+export const serviceRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+    return ctx.prisma.service.findMany();
   }),
-
+  addService: publicProcedure
+    .input(serviceSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.service.create({ data: input });
+    }
   getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+      return "you can now see this secret message!";
+    }),
 });
