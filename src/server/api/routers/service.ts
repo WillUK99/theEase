@@ -15,25 +15,31 @@ export const serviceRouter = createTRPCRouter({
       if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to add a service" })
 
       const { serviceId } = input
+      try {
+        const found = serviceId && (await ctx.prisma.service.findUnique({
+          where: {
+            serviceId,
+          }
+        }))
 
-      const found = serviceId && (await ctx.prisma.service.findUnique({
-        where: {
-          serviceId,
+        if (found) {
+          throw new TRPCError({
+            code: 'BAD_USER_INPUT',
+            message: 'Service already exists'
+          })
         }
-      }))
 
-      if (found) {
+        const service = await ctx.prisma.service.create({
+          data: input
+        })
+
+        return service
+      } catch (error) {
         throw new TRPCError({
-          code: 'BAD_USER_INPUT',
-          message: 'Service already exists'
+          code: 'BAD_REQUEST',
+          message: error.message
         })
       }
-
-      const service = await ctx.prisma.service.create({
-        data: input
-      })
-      console.log('***service', service)
-      return service
     }),
   // addAddon:
 });

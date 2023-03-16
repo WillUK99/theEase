@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NextPage } from 'next/types'
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import AdminLayout from '~/components/layouts/dashboard/admin'
@@ -9,7 +10,12 @@ import { serviceSchema, Service } from '~/constants/schemas/service';
 import { api } from "~/utils/api";
 
 const ServiceForm: React.FC = () => {
-  const { mutateAsync: addServiceMutation } = api.service.addService.useMutation()
+  const { data: sessionData } = useSession()
+  const { mutateAsync: addServiceMutation } = api.service.addService.useMutation({
+    onError: (error) => {
+      console.log(error)
+    }
+  })
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<Service>({
     resolver: zodResolver(serviceSchema)
   })
@@ -20,6 +26,7 @@ const ServiceForm: React.FC = () => {
       ...rest,
       price: parseFloat(priceValue),
       duration: Number(durationValue),
+      updatedBy: sessionData.user.name || sessionData.user.email
     };
     addServiceMutation(formattedData)
     reset()

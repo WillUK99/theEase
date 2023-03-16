@@ -80,6 +80,7 @@ model Service {
     isActive     Boolean         @default(true)
     isBestSeller Boolean         @default(false)
     isFeatured   Boolean         @default(false)
+    updatedBy    String          @default("admin")
     addons       ServiceAddons[]
 }
 
