@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { TRPCError } from '@trpc/server';
 
 import {
   createTRPCRouter,
@@ -6,16 +6,34 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
+import { serviceSchema } from "../../../constants/schemas/service";
+
 export const serviceRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.service.findMany();
-  }),
-  addService: publicProcedure
+  addService: protectedProcedure
     .input(serviceSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.service.create({ data: input });
-    }
-  getSecretMessage: protectedProcedure.query(() => {
-      return "you can now see this secret message!";
+    .mutation(async ({ ctx, input }) => {
+      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to add a service" })
+
+      const { serviceId } = input
+
+      const found = serviceId && (await ctx.prisma.service.findUnique({
+        where: {
+          serviceId,
+        }
+      }))
+
+      if (found) {
+        throw new TRPCError({
+          code: 'BAD_USER_INPUT',
+          message: 'Service already exists'
+        })
+      }
+
+      const service = await ctx.prisma.service.create({
+        data: input
+      })
+      console.log('***service', service)
+      return service
     }),
+  // addAddon:
 });
