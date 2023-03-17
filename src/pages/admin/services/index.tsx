@@ -30,6 +30,16 @@ const ServiceForm: React.FC = () => {
     try {
       await addServiceMutation(data)
       reset()
+      toast('Service has been created', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } catch (error) {
       console.error(error)
       toast.error(`${error.message}`, {
