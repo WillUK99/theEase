@@ -7,7 +7,7 @@ import { api } from "~/utils/api";
 import SiteLayout from '../components/layouts/site'
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
     <>

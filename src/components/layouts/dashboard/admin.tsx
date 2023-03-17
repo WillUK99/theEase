@@ -23,7 +23,7 @@ const AdminLayout = (props: Props) => {
           <nav className='flex items-center justify-center text-white gap-7'>
             <ul className='flex flex-row items-center justify-center gap-5'>
               <li>
-                <button onClick={() => signOut()}>
+                <button onClick={() => void signOut()}>
                   <Image
                     src='/svgs/logout.svg'
                     width={15}

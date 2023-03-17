@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-type Props = {}
-
-const Sidebar = (props: Props) => {
+const Sidebar = () => {
   return (
     <div
       className='flex flex-col items-center justify-between w-64 h-screen py-10 text-white bg-gray-900'
