@@ -11,7 +11,7 @@ export const serviceSchema = z.object({
   isActive: z.boolean().optional(),
   isBestSeller: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
-  addons: z.array().optional(),
+  // addons: z.array(z.string()).optional(), // re-add this once addons are implemented
 })
 
 export type Service = z.TypeOf<typeof serviceSchema>
