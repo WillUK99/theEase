@@ -1,28 +1,16 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 
-type Props = {
-  callback: () => any
-  sessionKey?: string
-}
-
-const useCallbackOnce: React.FC<Props> = ({ callback, sessionKey }) => {
-  const invoked = useRef<boolean>(false)
+const useCallbackOnce = (fn: () => void) => {
+  const [called, setCalled] = useState(false);
 
   useEffect(() => {
-    const hasBeenInvoked = sessionKey ? sessionStorage.getItem(sessionKey) : invoked.current
-
-    if (!hasBeenInvoked) {
-      callback()
-      invoked.current = true
+    if (!called) {
+      fn();
+      setCalled(true);
     }
+  }, [called, fn]);
 
-    if (sessionKey) {
-      sessionStorage.setItem(sessionKey, 'true')
-    }
-
-  }, [callback, sessionKey])
-
-  return null
+  return called;
 }
 
 export default useCallbackOnce

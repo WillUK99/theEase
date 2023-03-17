@@ -14,9 +14,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  useCallbackOnce({
-    callback: () => injectStyle(),
-    sessionKey: "toastifyStylesInjected",
+  useCallbackOnce(() => {
+    if (typeof window !== "undefined") {
+      injectStyle();
+    }
   })
 
   return (

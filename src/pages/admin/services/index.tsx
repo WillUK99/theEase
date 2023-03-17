@@ -5,6 +5,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast, ToastContainer } from 'react-toastify';
+import { TRPCClientError } from "@trpc/client";
 
 import AdminLayout from '~/components/layouts/dashboard/admin'
 import { serviceSchema, Service } from '~/constants/schemas/service';
@@ -30,10 +31,10 @@ const ServiceForm: React.FC = () => {
       await addServiceMutation(data)
       reset()
     } catch (error) {
-      console.log(error)
-      toast.warn('🦄 Wow so easy!', {
+      console.error(error)
+      toast.error(`${error.message}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
