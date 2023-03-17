@@ -8,11 +8,7 @@ import statCardData from '../../__mock__data__/statCardData.json'
 import AdminLayout from "../../components/layouts/dashboard/admin";
 import Link from 'next/link';
 
-type Props = {}
-
-const adminIndex: NextPage = (props: Props) => {
-  const { data: sessionData } = useSession()
-
+const adminIndex: NextPage = () => {
   const percentageColor = (percent: number) => {
     if (percent < 50) {
       return 'bg-red-500'
@@ -31,10 +27,10 @@ const adminIndex: NextPage = (props: Props) => {
       <div className='grid grid-cols-4 gap-5'>
         {
           // This will later only show the users selected stats they want to see
-          statCardData.slice(0, 4).map((stat) => {
+          statCardData.slice(0, 4).map((stat, i) => {
             const percentToTarget = ((stat.daily.total / stat.daily.target) * 100).toFixed(0)
             return (
-              <Link href={`/admin/reports/${stat.slug}`}>
+              <Link key={i} href={`/admin/reports/${stat.slug}`}>
                 <div key={stat.id} className='flex flex-col gap-5 p-5 bg-white border border-gray-400 rounded-md'>
                   <div className='flex items-center justify-between'>
                     <div>

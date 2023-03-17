@@ -67,20 +67,20 @@ model VerificationToken {
 }
 
 model Service {
-    id             String          @id @default(cuid())
-    name           String
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @updatedAt
-    price          Float
-    serviceId      String?
-    description    String?
-    what_to_expect String?
-    instructions   String?
-    duration       Int
-    isActive       Boolean         @default(true)
-    isBestSeller   Boolean         @default(false)
-    isFeatured     Boolean         @default(false)
-    addons         ServiceAddons[]
+    id           String          @id @default(cuid())
+    name         String
+    createdAt    DateTime        @default(now())
+    updatedAt    DateTime        @updatedAt
+    price        Int
+    serviceId    String          @unique
+    description  String
+    whatToExpect String?
+    instructions String?
+    duration     Int
+    isActive     Boolean         @default(true)
+    isBestSeller Boolean         @default(false)
+    isFeatured   Boolean         @default(false)
+    addons       ServiceAddons[]
 }
 
 model ServiceAddons {
