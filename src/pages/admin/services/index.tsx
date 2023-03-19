@@ -42,7 +42,7 @@ const ServiceForm: React.FC = () => {
       });
     } catch (error) {
       console.error(error)
-      toast.error(`${error.message}`, {
+      toast.error(`${error as string}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
