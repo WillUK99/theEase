@@ -9,13 +9,17 @@ import {
 import { serviceSchema } from "../../../constants/schemas/service";
 
 export const serviceRouter = createTRPCRouter({
-  addService: protectedProcedure
+  getAll: publicProcedure
+    .query(({ ctx }) => {
+      return ctx.prisma.service.findMany()
+    }),
+  add: protectedProcedure
     .input(serviceSchema)
     .mutation(async ({ ctx, input }) => {
-      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to add a service" })
+      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create a service" })
 
       const { serviceId } = input
-      // try {
+
       const found = serviceId && (await ctx.prisma.service.findUnique({
         where: {
           serviceId,
@@ -25,7 +29,7 @@ export const serviceRouter = createTRPCRouter({
       if (found) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Service already exists'
+          message: `Service already exists with id: ${serviceId}`
         })
       }
 
@@ -37,5 +41,4 @@ export const serviceRouter = createTRPCRouter({
 
       return service
     }),
-  // addAddon:
 });
