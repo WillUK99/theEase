@@ -14,6 +14,8 @@ import { addonSchema, Addon } from '~/constants/schemas/addon';
 import { api } from "~/utils/api";
 import { onPromise } from "~/utils/async";
 import { getServerAuthSession } from '~/server/auth';
+import Link from 'next/link';
+import slugify from '~/utils/slugify';
 
 const AddonForm: React.FC = () => {
   const { mutateAsync: createAddonMutation } = api.addon.add.useMutation({
@@ -21,7 +23,7 @@ const AddonForm: React.FC = () => {
       console.log(error)
     },
   })
-  const services = api.service.getAll.useQuery<Service>(['allServices'], { staleTime: 5 * 60 * 1000 });
+  const services = api.service.getAll.useQuery<Service>(undefined, { staleTime: 5 * 60 * 1000 });
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Addon>({
     resolver: zodResolver(addonSchema)
   })
@@ -96,10 +98,6 @@ const ServiceForm: React.FC = () => {
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<Service>({
     resolver: zodResolver(serviceSchema)
   })
-  // const { append } = useFieldArray({
-  //   control,
-  //   name: "addons"
-  // });
 
   const onSubmit: SubmitHandler<Service> = async (data: Service) => {
     try {
@@ -174,15 +172,6 @@ const ServiceForm: React.FC = () => {
         <label className='cursor-pointer' htmlFor="isFeatured">Featured</label>
         <input id='isFeatured' type="checkbox" {...register("isFeatured")} className={`border ${errors.isFeatured ? 'border-red-500' : ''}`} />
       </div>
-      {/* re-add this once addons are implmented - get prisma errors as id's don't match anything in db */}
-      {/* <button
-        type="button"
-        onClick={() => {
-          append('testid');
-        }}
-      >
-        Add addon
-      </button> */}
       <button type='submit' className='bg-purple-500 text-white p-5 rounded-sm w-fit'>Continue</button>
     </form>
   )
@@ -190,6 +179,7 @@ const ServiceForm: React.FC = () => {
 
 const ServicesPage: NextPage = () => {
   const [showForm, setShowForm] = useState<'service' | 'addon'>('service')
+  const services = api.service.getAll.useQuery<Service>(undefined, { staleTime: 5 * 60 * 1000 });
 
   return (
     <AdminLayout>
@@ -202,7 +192,41 @@ const ServicesPage: NextPage = () => {
           <ServiceForm />
         ) : <AddonForm />
       }
-    </AdminLayout >
+      <table className='overflow-scroll'>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Service ID</th>
+            <th>Description</th>
+            <th>What to expect</th>
+            <th>Instructions</th>
+            <th>Duration</th>
+            <th>Active</th>
+            <th>Bestseller</th>
+            <th>Featured</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            services.data?.map(service => (
+              <tr key={service.id}>
+                <td>{service.name}</td>
+                <td>{service.price}</td>
+                <td><Link href={`/admin/services/${service.id}`}>{service.serviceId}</Link></td>
+                <td>{service.description}</td>
+                <td>{service.whatToExpect}</td>
+                <td>{service.instructions}</td>
+                <td>{service.duration}</td>
+                <td>{service.isActive ? 'Yes' : 'No'}</td>
+                <td>{service.isBestSeller ? 'Yes' : 'No'}</td>
+                <td>{service.isFeatured ? 'Yes' : 'No'}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </AdminLayout>
   )
 }
 
