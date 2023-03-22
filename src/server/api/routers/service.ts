@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
 
 import {
   createTRPCRouter,
@@ -12,6 +13,26 @@ export const serviceRouter = createTRPCRouter({
   getAll: publicProcedure
     .query(({ ctx }) => {
       return ctx.prisma.service.findMany()
+    }),
+  getOne: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input
+
+      const service = await ctx.prisma.service.findUnique({
+        where: {
+          id
+        }
+      })
+
+      if (!service) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `Service not found with id: ${id}`
+        })
+      }
+
+      return service
     }),
   add: protectedProcedure
     .input(serviceSchema)

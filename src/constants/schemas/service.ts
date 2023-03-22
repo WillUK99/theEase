@@ -1,6 +1,7 @@
 import z from 'zod'
 
 export const serviceSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1),
   price: z.number().min(1),
   serviceId: z.string().min(1),
@@ -11,7 +12,6 @@ export const serviceSchema = z.object({
   isActive: z.boolean().optional(),
   isBestSeller: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
-  // addons: z.array(z.string()).optional(), // re-add this once addons are implemented
 })
 
 export type Service = z.TypeOf<typeof serviceSchema>
