@@ -2,9 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
+  createTRPCRouter, protectedProcedure, publicProcedure
 } from "~/server/api/trpc";
 
 import { serviceSchema } from "../../../constants/schemas/service";
@@ -55,6 +53,37 @@ export const serviceRouter = createTRPCRouter({
       }
 
       const service = await ctx.prisma.service.create({
+        data: {
+          ...input
+        }
+      })
+
+      return service
+    }),
+  update: protectedProcedure
+    .input(serviceSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to update a service" })
+
+      const { serviceId } = input
+
+      const found = serviceId && (await ctx.prisma.service.findUnique({
+        where: {
+          serviceId,
+        }
+      }))
+
+      if (!found) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Service not found with id: ${serviceId}`
+        })
+      }
+
+      const service = await ctx.prisma.service.update({
+        where: {
+          serviceId
+        },
         data: {
           ...input
         }

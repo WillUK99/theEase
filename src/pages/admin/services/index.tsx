@@ -1,21 +1,17 @@
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import type { GetServerSidePropsContext, NextPage } from 'next/types'
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
-import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast, ToastContainer } from 'react-toastify';
-import { TRPCClientError } from "@trpc/client";
+import type { GetServerSidePropsContext, NextPage } from 'next/types';
+import { useState } from 'react';
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { toast } from 'react-toastify';
 
-import AdminLayout from '~/components/layouts/dashboard/admin'
-import { serviceSchema, Service } from '~/constants/schemas/service';
-import { addonSchema, Addon } from '~/constants/schemas/addon';
-import { api } from "~/utils/api";
-import { onPromise } from "~/utils/async";
-import { getServerAuthSession } from '~/server/auth';
 import Link from 'next/link';
-import slugify from '~/utils/slugify';
+import AdminLayout from '~/components/layouts/dashboard/admin';
+import { Addon, addonSchema } from '~/constants/schemas/addon';
+import { Service, serviceSchema } from '~/constants/schemas/service';
+import { getServerAuthSession } from '~/server/auth';
+import { api, getBaseUrl } from "~/utils/api";
+import { onPromise } from "~/utils/async";
 
 const AddonForm: React.FC = () => {
   const ctx = api.useContext();
@@ -29,6 +25,7 @@ const AddonForm: React.FC = () => {
       errorMessage ? toast.error(errorMessage) : toast.error('Something went wrong')
     },
   })
+
   const services = api.service.getAll.useQuery<Service>(undefined, { staleTime: 5 * 60 * 1000 });
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Addon>({
@@ -82,6 +79,7 @@ const ServiceForm: React.FC = () => {
       errorMessage ? toast.error(errorMessage) : toast.error('Something went wrong')
     },
   })
+
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<Service>({
     resolver: zodResolver(serviceSchema)
   })
