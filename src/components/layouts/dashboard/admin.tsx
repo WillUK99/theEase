@@ -1,18 +1,12 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 
 import Sidebar from './sidebar'
 
-type Props = {
-  children: React.ReactNode
-}
-
-const AdminLayout = (props: Props) => {
+const AdminLayout = (props: PropsWithChildren) => {
   const { data: sessionData } = useSession()
-
-  const { children } = props
 
   return (
     <div className='flex w-screen h-screen '>
@@ -66,7 +60,7 @@ const AdminLayout = (props: Props) => {
           </nav>
         </div>
         <div className='h-full p-4 bg-slate-100'>
-          {children}
+          {props.children}
         </div>
       </div>
     </div>
