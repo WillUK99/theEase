@@ -1,3 +1,4 @@
+import { UserRoleEnum } from './../../../types/user.types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -35,7 +36,7 @@ export const serviceRouter = createTRPCRouter({
   add: protectedProcedure
     .input(serviceSchema)
     .mutation(async ({ ctx, input }) => {
-      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create a service" })
+      if (ctx?.session?.user.role !== UserRoleEnum.SUPER) throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create a service" })
 
       const { serviceId } = input
 
@@ -63,7 +64,7 @@ export const serviceRouter = createTRPCRouter({
   update: protectedProcedure
     .input(serviceSchema)
     .mutation(async ({ ctx, input }) => {
-      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to update a service" })
+      if (ctx?.session?.user.role !== UserRoleEnum.SUPER) throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to update a service" })
 
       const { serviceId } = input
 

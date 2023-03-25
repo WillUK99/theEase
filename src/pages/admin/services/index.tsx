@@ -10,8 +10,9 @@ import AdminLayout from '~/components/layouts/dashboard/admin';
 import { Addon, addonSchema } from '~/constants/schemas/addon';
 import { Service, serviceSchema } from '~/constants/schemas/service';
 import { getServerAuthSession } from '~/server/auth';
-import { api, getBaseUrl } from "~/utils/api";
+import { api } from "~/utils/api";
 import { onPromise } from "~/utils/async";
+import { UserRoleEnum } from "~/types/user.types";
 
 const AddonForm: React.FC = () => {
   const ctx = api.useContext();
@@ -195,7 +196,7 @@ const ServicesPage: NextPage = () => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(ctx)
 
-  if (!session || session.user.role === 'USER') {
+  if (!session || session.user.role === UserRoleEnum.USER) {
     return {
       redirect: {
         destination: '/',

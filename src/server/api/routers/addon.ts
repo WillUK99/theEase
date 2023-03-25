@@ -5,6 +5,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { UserRoleEnum } from '~/types/user.types';
 
 import { addonSchema } from "../../../constants/schemas/addon";
 
@@ -12,7 +13,7 @@ export const addonRouter = createTRPCRouter({
   add: protectedProcedure
     .input(addonSchema)
     .mutation(async ({ ctx, input }) => {
-      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create an addon" })
+      if (ctx?.session?.user.role !== UserRoleEnum.SUPER) throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create an addon" })
 
       const { addonId } = input
 
