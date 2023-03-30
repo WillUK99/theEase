@@ -66,24 +66,24 @@ export const serviceRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx?.session?.user.role !== UserRoleEnum.SUPER) throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to update a service" })
 
-      const { serviceId } = input
+      const { id } = input
 
-      const found = serviceId && (await ctx.prisma.service.findUnique({
+      const found = id && (await ctx.prisma.service.findUnique({
         where: {
-          serviceId,
+          id,
         }
       }))
 
       if (!found) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: `Service not found with id: ${serviceId}`
+          message: `Service not found with id: ${id}`
         })
       }
 
       const service = await ctx.prisma.service.update({
         where: {
-          serviceId
+          id
         },
         data: {
           ...input
