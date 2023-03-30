@@ -68,6 +68,8 @@ export const serviceRouter = createTRPCRouter({
 
       const { id } = input
 
+      if (!id) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Service id is required' })
+
       const found = id && (await ctx.prisma.service.findUnique({
         where: {
           id,

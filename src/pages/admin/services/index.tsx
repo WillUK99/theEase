@@ -33,7 +33,7 @@ const AddonForm: React.FC = () => {
     resolver: zodResolver(addonSchema)
   })
 
-  const onSubmit: SubmitHandler<Addon> = async (data: Addon) => {
+  const onSubmit: SubmitHandler<Addon> = (data: Addon) => {
     createAddonMutation(data).then(() => reset()).catch(console.error)
   }
 
@@ -85,7 +85,7 @@ const ServiceForm: React.FC = () => {
     resolver: zodResolver(serviceSchema)
   })
 
-  const onSubmit: SubmitHandler<Service> = async (data: Service) => {
+  const onSubmit: SubmitHandler<Service> = (data: Service) => {
     addServiceMutation(data).then(() => reset()).catch(console.error)
   }
 
