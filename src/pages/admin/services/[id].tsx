@@ -12,16 +12,15 @@ import { api } from "~/utils/api";
 import { Service, serviceSchema } from "~/constants/schemas/service";
 import { onPromise } from "~/utils/async";
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>
+type Props = {
+  id: string
+}
 
 type EditServiceFormProps = {
-  formData: Service & { id: string }
+  formData: Service & { id?: string }
 }
 
 const EditServiceForm = ({ formData }: EditServiceFormProps) => {
-  console.log('rerendering edit form')
-
-
   const { register, handleSubmit, formState: { errors } } = useForm<Service>({
     resolver: zodResolver(serviceSchema),
     defaultValues: formData
@@ -37,7 +36,7 @@ const EditServiceForm = ({ formData }: EditServiceFormProps) => {
     },
   })
 
-  const onSubmit: SubmitHandler<Service> = async (data: Service) => {
+  const onSubmit: SubmitHandler<Service> = (data: Service) => {
     updateServiceMutation({ id: formData.id, ...data }).catch(console.error)
   }
 
@@ -102,10 +101,7 @@ const ServicePage: NextPage<Props> = ({ id }: Props) => {
 
   const { id: dbId, createdAt, updatedAt, ...rest } = data || {}
 
-  const formData = { ...rest }
-
-  console.log('rerendering')
-  console.log('formData', formData)
+  const formData = { ...rest } as Service // TODO: fix this at some point ¯\_(ツ)_/¯ 
 
   return (
     <AdminLayout>
