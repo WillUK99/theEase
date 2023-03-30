@@ -1,61 +1,40 @@
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import type { GetServerSidePropsContext, NextPage } from 'next/types'
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
-import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast, ToastContainer } from 'react-toastify';
-import { TRPCClientError } from "@trpc/client";
+import type { GetServerSidePropsContext, NextPage } from 'next/types';
+import { useState } from 'react';
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { toast } from 'react-toastify';
 
-import AdminLayout from '~/components/layouts/dashboard/admin'
-import { serviceSchema, Service } from '~/constants/schemas/service';
-import { addonSchema, Addon } from '~/constants/schemas/addon';
+import Link from 'next/link';
+import AdminLayout from '~/components/layouts/dashboard/admin';
+import { Addon, addonSchema } from '~/constants/schemas/addon';
+import { Service, serviceSchema } from '~/constants/schemas/service';
+import { getServerAuthSession } from '~/server/auth';
 import { api } from "~/utils/api";
 import { onPromise } from "~/utils/async";
-import { getServerAuthSession } from '~/server/auth';
-import Link from 'next/link';
-import slugify from '~/utils/slugify';
+import { UserRoleEnum } from "~/types/user.types";
 
 const AddonForm: React.FC = () => {
+  const ctx = api.useContext();
+
   const { mutateAsync: createAddonMutation } = api.addon.add.useMutation({
-    onError: (error) => {
-      console.log(error)
+    onSuccess: () => {
+      void ctx.service.getAll.invalidate();
+    },
+    onError: (e) => {
+      const errorMessage = e?.message
+      errorMessage ? toast.error(errorMessage) : toast.error('Something went wrong')
     },
   })
+
   const services = api.service.getAll.useQuery<Service>(undefined, { staleTime: 5 * 60 * 1000 });
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Addon>({
     resolver: zodResolver(addonSchema)
   })
 
   const onSubmit: SubmitHandler<Addon> = async (data: Addon) => {
-    try {
-      await createAddonMutation(data)
-      console.log(data)
-      reset()
-      toast('Addon has been created', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } catch (error) {
-      console.error(error)
-      toast.error(`${error as string}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
+    createAddonMutation(data).then(() => reset()).catch(console.error)
   }
 
   return (
@@ -90,42 +69,24 @@ const AddonForm: React.FC = () => {
 }
 
 const ServiceForm: React.FC = () => {
+  const ctx = api.useContext();
+
   const { mutateAsync: addServiceMutation } = api.service.add.useMutation({
-    onError: (error) => {
-      console.log(error)
-    }
+    onSuccess: () => {
+      void ctx.service.getAll.invalidate();
+    },
+    onError: (e) => {
+      const errorMessage = e?.message
+      errorMessage ? toast.error(errorMessage) : toast.error('Something went wrong')
+    },
   })
+
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<Service>({
     resolver: zodResolver(serviceSchema)
   })
 
   const onSubmit: SubmitHandler<Service> = async (data: Service) => {
-    try {
-      await addServiceMutation(data)
-      reset()
-      toast('Service has been created', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } catch (error) {
-      console.error(error)
-      toast.error(`${error as string}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
+    addServiceMutation(data).then(() => reset()).catch(console.error)
   }
 
   return (
@@ -205,6 +166,7 @@ const ServicesPage: NextPage = () => {
             <th>Active</th>
             <th>Bestseller</th>
             <th>Featured</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -213,7 +175,7 @@ const ServicesPage: NextPage = () => {
               <tr key={service.id}>
                 <td>{service.name}</td>
                 <td>{service.price}</td>
-                <td><Link href={`/admin/services/${service.id}`}>{service.serviceId}</Link></td>
+                <td className='text-blue-600 underline'><Link href={`/admin/services/${service.id}`}>{service.serviceId}</Link></td>
                 <td>{service.description}</td>
                 <td>{service.whatToExpect}</td>
                 <td>{service.instructions}</td>
@@ -221,6 +183,7 @@ const ServicesPage: NextPage = () => {
                 <td>{service.isActive ? 'Yes' : 'No'}</td>
                 <td>{service.isBestSeller ? 'Yes' : 'No'}</td>
                 <td>{service.isFeatured ? 'Yes' : 'No'}</td>
+                <td className='text-blue-600 underline'><Link href={`/admin/services/${service.id}`}>Edit</Link></td>
               </tr>
             ))
           }
@@ -233,7 +196,7 @@ const ServicesPage: NextPage = () => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(ctx)
 
-  if (!session || session.user.role === 'USER') {
+  if (!session || session.user.role === UserRoleEnum.USER) {
     return {
       redirect: {
         destination: '/',

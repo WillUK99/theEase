@@ -1,10 +1,9 @@
+import { UserRoleEnum } from './../../../types/user.types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
+  createTRPCRouter, protectedProcedure, publicProcedure
 } from "~/server/api/trpc";
 
 import { serviceSchema } from "../../../constants/schemas/service";
@@ -37,7 +36,7 @@ export const serviceRouter = createTRPCRouter({
   add: protectedProcedure
     .input(serviceSchema)
     .mutation(async ({ ctx, input }) => {
-      if (ctx?.session?.user.role !== "SUPER") throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create a service" })
+      if (ctx?.session?.user.role !== UserRoleEnum.SUPER) throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to create a service" })
 
       const { serviceId } = input
 
@@ -55,6 +54,37 @@ export const serviceRouter = createTRPCRouter({
       }
 
       const service = await ctx.prisma.service.create({
+        data: {
+          ...input
+        }
+      })
+
+      return service
+    }),
+  update: protectedProcedure
+    .input(serviceSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (ctx?.session?.user.role !== UserRoleEnum.SUPER) throw new TRPCError({ code: 'UNAUTHORIZED', message: "You don't have permission to update a service" })
+
+      const { id } = input
+
+      const found = id && (await ctx.prisma.service.findUnique({
+        where: {
+          id,
+        }
+      }))
+
+      if (!found) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Service not found with id: ${id}`
+        })
+      }
+
+      const service = await ctx.prisma.service.update({
+        where: {
+          id
+        },
         data: {
           ...input
         }
