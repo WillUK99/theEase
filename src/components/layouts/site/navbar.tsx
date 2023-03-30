@@ -4,8 +4,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 const Navbar = () => {
   const { data: sessionData } = useSession()
 
-  console.log(sessionData)
-
   return (
     <nav className='container flex flex-row items-center justify-between py-5 mx-auto'>
       <ul className='flex flex-row items-center justify-center gap-10'>
@@ -25,7 +23,7 @@ const Navbar = () => {
       </Link>
 
       <button
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
+        onClick={sessionData ? () => void signOut() : () => void signIn('google')}
       >
         {sessionData ? 'Sign out' : 'Sign in'}
       </button>

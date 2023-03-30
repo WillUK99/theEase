@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 
 import Navbar from './navbar'
 
@@ -6,12 +6,11 @@ type Props = {
   children: React.ReactNode
 }
 
-const SiteLayout = (props: Props) => {
-  const { children } = props
+const SiteLayout = (props: PropsWithChildren) => {
   return (
     <>
       <Navbar />
-      {children}
+      {props.children}
     </>
   )
 }
