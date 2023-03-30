@@ -23,7 +23,7 @@ const Navbar = () => {
       </Link>
 
       <button
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
+        onClick={sessionData ? () => void signOut() : () => void signIn('google')}
       >
         {sessionData ? 'Sign out' : 'Sign in'}
       </button>
